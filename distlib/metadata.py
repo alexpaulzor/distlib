@@ -448,7 +448,7 @@ class LegacyMetadata(object):
     def set(self, name, value):
         """Control then set a metadata field."""
         name = self._convert_name(name)
-
+        logger.warning("LegacySetting {} . {} = {}".format(self, name, value))
         if ((name in _ELEMENTSFIELD or name == 'Platform') and
             not isinstance(value, (list, tuple))):
             if isinstance(value, string_types):
@@ -819,6 +819,7 @@ class Metadata(object):
                                                                     key))
 
     def __setattr__(self, key, value):
+        logger.warning("Setting {} . {} = {}".format(self, key, value))
         self._validate_value(key, value)
         common = object.__getattribute__(self, 'common_keys')
         mapped = object.__getattribute__(self, 'mapped_keys')

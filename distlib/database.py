@@ -1327,13 +1327,24 @@ def get_required_dists(dists, dist):
     return req
 
 
-def make_dist(name, version, **kwargs):
+def make_dist(name, version, requires_python=None, **kwargs):
     """
     A convenience method for making a dist given just a name and version.
     """
+    logger.warning("Making dist for {}={} ({})+{}".format(name, version, requires_python, kwargs))
     summary = kwargs.pop('summary', 'Placeholder for summary')
-    md = Metadata(**kwargs)
+    try:
+        md = Metadata(**kwargs)
+    except:
+        logger.exception("Could not create metadata")
+        raise
     md.name = name
     md.version = version
     md.summary = summary or 'Placeholder for summary'
+    if requires_python:
+        logger.warning("{}=={} REQUIRES {}".format(
+            name, version, requires_python))
+        md.requires_python = requires_python
+        logger.warning("{}=={} REQUIRES {}".format(
+            name, version, requires_python))
     return Distribution(md)

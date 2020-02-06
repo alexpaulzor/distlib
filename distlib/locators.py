@@ -333,11 +333,16 @@ class Locator(object):
         """
         name = info.pop('name')
         version = info.pop('version')
+        pyver = info.get('python-version')
         if version in result:
             dist = result[version]
             md = dist.metadata
         else:
-            dist = make_dist(name, version, scheme=self.scheme)
+            kwargs = dict(scheme=self.scheme)
+            if pyver:
+                logger.warning("Got info {}".format(info))
+                kwargs['requires_python'] = pyver
+            dist = make_dist(name, version, **kwargs)
             md = dist.metadata
         dist.digest = digest = self._get_digest(info)
         url = info['url']
