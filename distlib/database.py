@@ -446,6 +446,8 @@ class Distribution(object):
             suffix = ' [%s]' % self.source_url
         else:
             suffix = ''
+        if self.metadata.requires_python:
+            suffix += '@py{}'.format(self.metadata.requires_python)
         return '<Distribution %s (%s)%s>' % (self.name, self.version, suffix)
 
     def __eq__(self, other):
@@ -1331,20 +1333,11 @@ def make_dist(name, version, requires_python=None, **kwargs):
     """
     A convenience method for making a dist given just a name and version.
     """
-    logger.warning("Making dist for {}={} ({})+{}".format(name, version, requires_python, kwargs))
     summary = kwargs.pop('summary', 'Placeholder for summary')
     md = Metadata(**kwargs)
     md.name = name
     md.version = version
     md.summary = summary or 'Placeholder for summary'
     if requires_python:
-        logger.warning("{}=={} REQUIRES {}".format(
-            name, version, requires_python))
-        try:
-            md.requires_python = requires_python
-        except:
-            logger.exception("Could not create metadata")
-            raise
-        logger.warning("{}=={} REQUIRES {}".format(
-            name, version, requires_python))
+        md.requires_python = requires_python
     return Distribution(md)
