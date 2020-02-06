@@ -1333,18 +1333,18 @@ def make_dist(name, version, requires_python=None, **kwargs):
     """
     logger.warning("Making dist for {}={} ({})+{}".format(name, version, requires_python, kwargs))
     summary = kwargs.pop('summary', 'Placeholder for summary')
-    try:
-        md = Metadata(**kwargs)
-    except:
-        logger.exception("Could not create metadata")
-        raise
+    md = Metadata(**kwargs)
     md.name = name
     md.version = version
     md.summary = summary or 'Placeholder for summary'
     if requires_python:
         logger.warning("{}=={} REQUIRES {}".format(
             name, version, requires_python))
-        md.requires_python = requires_python
+        try:
+            md.requires_python = requires_python
+        except:
+            logger.exception("Could not create metadata")
+            raise
         logger.warning("{}=={} REQUIRES {}".format(
             name, version, requires_python))
     return Distribution(md)

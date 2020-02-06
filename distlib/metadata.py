@@ -753,6 +753,7 @@ class Metadata(object):
         'dev_requires': none_list,
         'test_requires': none_list,
         'meta_requires': none_list,
+        'requires_python': ('Requires-Python', list),
         'extras': ('Provides-Extra', list),
         'modules': none_list,
         'namespaces': none_list,
@@ -819,7 +820,7 @@ class Metadata(object):
                                                                     key))
 
     def __setattr__(self, key, value):
-        logger.warning("Setting {} . {} = {}".format(self, key, value))
+        logger.warning("Setting {} = {}".format(key, value))
         self._validate_value(key, value)
         common = object.__getattribute__(self, 'common_keys')
         mapped = object.__getattribute__(self, 'mapped_keys')
